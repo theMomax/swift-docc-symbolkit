@@ -23,6 +23,16 @@ extension SymbolGraph.Symbol.Swift {
          > Note: This module maybe different than where the symbol was actually defined. For example, one can create a public extension on the Swift Standard Library's `String` type in a different module, so `extendedModule` would be `Swift`.
          */
         public var extendedModule: String
+        
+        /**
+         The ``SymbolGraph/Symbol/KindIdentifier`` of the symbol this
+         extension extends.
+         
+         Usually, this will be either of ``SymbolGraph/Symbol/KindIdentifier/struct``,
+         ``SymbolGraph/Symbol/KindIdentifier/class``, ``SymbolGraph/Symbol/KindIdentifier/enum``
+         or ``SymbolGraph/Symbol/KindIdentifier/protocol``.
+         */
+        public var typeKind: SymbolGraph.Symbol.KindIdentifier
 
         /**
          The generic constraints on the extension, if any.
@@ -31,12 +41,14 @@ extension SymbolGraph.Symbol.Swift {
 
         enum CodingKeys: String, CodingKey {
             case extendedModule
+            case typeKind
             case constraints
         }
 
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             extendedModule = try container.decode(String.self, forKey: .extendedModule)
+            typeKind = try container.decode(SymbolGraph.Symbol.KindIdentifier.self, forKey: .typeKind)
             constraints = try container.decodeIfPresent([GenericConstraint].self, forKey: .constraints) ?? []
         }
 
