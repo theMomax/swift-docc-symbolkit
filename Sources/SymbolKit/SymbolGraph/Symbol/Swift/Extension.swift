@@ -32,7 +32,7 @@ extension SymbolGraph.Symbol.Swift {
          ``SymbolGraph/Symbol/KindIdentifier/class``, ``SymbolGraph/Symbol/KindIdentifier/enum``
          or ``SymbolGraph/Symbol/KindIdentifier/protocol``.
          */
-        public var typeKind: SymbolGraph.Symbol.KindIdentifier
+        public var typeKind: SymbolGraph.Symbol.KindIdentifier?
 
         /**
          The generic constraints on the extension, if any.
@@ -48,13 +48,14 @@ extension SymbolGraph.Symbol.Swift {
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             extendedModule = try container.decode(String.self, forKey: .extendedModule)
-            typeKind = try container.decode(SymbolGraph.Symbol.KindIdentifier.self, forKey: .typeKind)
+            typeKind = try container.decodeIfPresent(SymbolGraph.Symbol.KindIdentifier.self, forKey: .typeKind)
             constraints = try container.decodeIfPresent([GenericConstraint].self, forKey: .constraints) ?? []
         }
 
         public func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
             try container.encode(extendedModule, forKey: .extendedModule)
+            try container.encodeIfPresent(typeKind, forKey: .typeKind)
             if !constraints.isEmpty {
                 try container.encode(constraints, forKey: .constraints)
             }
