@@ -45,8 +45,9 @@ extension SymbolGraph.Symbol.Swift {
             case constraints
         }
         
-        public init(extendedModule: String, constraints: [SymbolGraph.Symbol.Swift.GenericConstraint]) {
+        public init(extendedModule: String, typeKind: SymbolGraph.Symbol.KindIdentifier? = nil, constraints: [SymbolGraph.Symbol.Swift.GenericConstraint]) {
             self.extendedModule = extendedModule
+            self.typeKind = typeKind
             self.constraints = constraints
         }
 
